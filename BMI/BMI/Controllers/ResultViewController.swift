@@ -13,9 +13,7 @@ class ResultViewController: UIViewController {
     @IBOutlet weak var adviceLabel: UILabel!
     @IBOutlet weak var reCalculateButton: UIButton!
     
-    var resultBMI: Double?
-    var bmiColor: UIColor?
-    var adviceString: String?
+    var  bmi: BMI?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,10 +29,10 @@ class ResultViewController: UIViewController {
         reCalculateButton.clipsToBounds = true
         reCalculateButton.layer.cornerRadius = 8
         
-        guard let resultBMI else { return }
+        guard let resultBMI = bmi?.value else { return }
         resultLabel.text = String(resultBMI)
-        resultLabel.backgroundColor = bmiColor
-        adviceLabel.text = adviceString
+        resultLabel.backgroundColor = bmi?.matchColor
+        adviceLabel.text = bmi?.advice
     }
     
     
