@@ -1,14 +1,14 @@
 //
-//  ViewController.swift
+//  LoginView.swift
 //  Login
 //
-//  Created by 김태완 on 9/11/24.
+//  Created by 김태완 on 10/5/24.
 //
 
 import UIKit
 
-final class ViewController: UIViewController {
-
+class LoginView: UIView {
+    
     // MARK: - 이메일 텍스트 뷰
     private lazy var emailTextFieldView: UIView = {
         let view = UIView()
@@ -92,7 +92,7 @@ final class ViewController: UIViewController {
     }()
 
     // MARK: - 로그인버튼
-    private lazy var loginButton: UIButton = {
+    lazy var loginButton: UIButton = {
         let button = UIButton(type: .custom)
         button.backgroundColor = .clear
         button.layer.cornerRadius = 5
@@ -102,7 +102,6 @@ final class ViewController: UIViewController {
         button.setTitle("로그인", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         button.isEnabled = false
-        button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -117,12 +116,11 @@ final class ViewController: UIViewController {
     }()
 
     // 비밀번호 재설정 버튼
-    private lazy var passwordResetButton: UIButton = {
+    lazy var passwordResetButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
         button.setTitle("비밀번호 재설정", for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(resetButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -133,8 +131,8 @@ final class ViewController: UIViewController {
     lazy var emailInfoLabelCenterYConstraint = emailInfoLabel.centerYAnchor.constraint(equalTo: emailTextFieldView.centerYAnchor)
     lazy var passwordInfoLabelCenterYConstraint = passwordInfoLabel.centerYAnchor.constraint(equalTo: passwordTextFieldView.centerYAnchor)
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
@@ -142,15 +140,19 @@ final class ViewController: UIViewController {
         makeUI()
     }
     
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     func disableAutoresizingForViews(_ views: [UIView]) {
         views.forEach { $0.translatesAutoresizingMaskIntoConstraints = false }
     }
 
     func makeUI() {
-        view.backgroundColor = .black
+        backgroundColor = .black
 
-        view.addSubview(stackView)
-        view.addSubview(passwordResetButton)
+        addSubview(stackView)
+        addSubview(passwordResetButton)
         
         disableAutoresizingForViews([emailInfoLabel, emailTextField, passwordInfoLabel, passwordTextField, passwordSecureButton, stackView, passwordResetButton])
 
@@ -177,47 +179,22 @@ final class ViewController: UIViewController {
             passwordSecureButton.bottomAnchor.constraint(equalTo: passwordTextFieldView.bottomAnchor, constant: -15),
             passwordSecureButton.trailingAnchor.constraint(equalTo: passwordTextFieldView.trailingAnchor, constant: -8),
 
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            stackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             stackView.heightAnchor.constraint(equalToConstant: textViewHeight * 3 + 36),
 
             passwordResetButton.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 10),
-            passwordResetButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            passwordResetButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
+            passwordResetButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+            passwordResetButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
             passwordResetButton.heightAnchor.constraint(equalToConstant: textViewHeight)
         ])
         
     }
-    
-    @objc func passwordSecureModeSetting() {
-        passwordTextField.isSecureTextEntry.toggle()
-    }
-    
-    // 로그인 버튼 누르면 동작하는 함수
-    @objc func loginButtonTapped() {
-        print("loginButton")
-    }
-
-    @objc func resetButtonTapped() {
-        let alert = UIAlertController(title: "비밀번호 바꾸기", message: "비밀번호를 바꾸시겠습니까?", preferredStyle: .alert)
-        let succes = UIAlertAction(title: "확인", style: .default) { action in print("success") }
-        let cancel = UIAlertAction(title: "취소", style: .default) { cancle in print("cancle") }
-        
-        alert.addAction(succes)
-        alert.addAction(cancel)
-        
-        present(alert, animated: true, completion: nil)
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
-
 }
 
-extension ViewController: UITextFieldDelegate {
+extension LoginView: UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField == emailTextField {
@@ -290,4 +267,12 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
     
+    @objc func passwordSecureModeSetting() {
+        passwordTextField.isSecureTextEntry.toggle()
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.endEditing(true)
+    }
+
 }
