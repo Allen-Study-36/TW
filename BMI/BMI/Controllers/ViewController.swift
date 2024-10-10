@@ -86,6 +86,7 @@ extension ViewController: UITextFieldDelegate {
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        
         heightInput.resignFirstResponder()
         weightInput.resignFirstResponder()
     }
